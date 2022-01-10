@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 
 import "./App.css";
-import Logo from "./components/Logo";
+import Logo from "./components/Logo/Logo";
+import Photo from "./components/Photo/Photo";
 
 function App() {
   const [images, setImages] = useState([]);
@@ -12,7 +13,7 @@ function App() {
     console.log(images);
   }, []);
 
-  function updateLikes(image) {
+  function showLikes(image) {
     return fetch(`http://localhost:3000/images/${image.id}`, {
       method: "PATCH",
       headers: {
@@ -25,7 +26,7 @@ function App() {
   function increaseLikes(image) {
     const update = [...images];
     image.likes++;
-    updateLikes(image);
+    showLikes(image);
     setImages(update);
   }
 
@@ -35,26 +36,7 @@ function App() {
       <Logo />
 
       {/* <!-- image cards -->*/}
-      <section className="image-container">
-        {/* <!-- This is the HTML for each card. Use the following HTML as reference to build your React components -->*/}
-        {images.map((image) => {
-          return (
-            <article className="image-card">
-              <h2 className="title">{image.title}</h2>
-              <img src={image.image} className="image" />
-              <div className="likes-section">
-                <span className="likes">{image.likes}</span>
-                <button className="like-button">♥</button>
-              </div>
-              <ul className="comments">
-                {image.comments.map((comment) => {
-                  return <li>{comment.content}</li>;
-                })}
-              </ul>
-            </article>
-          );
-        })}
-      </section>
+      <Photo images={images} increaseLikes={increaseLikes} />
     </div>
   );
 }
